@@ -1,14 +1,11 @@
-# import aiohttp
+import base64
 
 from db import SessionLocal
 from models import UserTable, Audio
 from sqlalchemy.orm import Session
 from uuid import UUID
 from fastapi import HTTPException
-from pydub import AudioSegment
 from decouple import config
-from sqlalchemy import LargeBinary
-import base64
 
 
 # Create a session to access the db
@@ -21,11 +18,11 @@ def get_db():
         db.close()
 
 
-# Create_request
 async def db_create_user(
         user_name: str,
         db: Session):
-    """This function creates an instance in User table. Arguments: user_name (str), db (Session).
+    """
+    This function creates an instance in User table. Arguments: user_name (str), db (Session).
     Function returns a dict with user_id, user_token and user_name.
     """
     try:
@@ -47,7 +44,8 @@ async def db_verify_user(
         user_id: UUID,
         user_token: UUID,
         db: Session):
-    """This function verifies if user instance exists. Arguments: user_id (UUID), user_token (UUID), db (Session).
+    """
+    This function verifies if user instance exists. Arguments: user_id (UUID), user_token (UUID), db (Session).
     Function returns 'True' if user with this user_id and user_token exists, and 'False' if not.
     """
     try:
@@ -67,7 +65,8 @@ async def db_save_audio(
         audio_data: bytes,
         user_id: UUID,
         db: Session):
-    """Function to save mp3 file in db. Arguments: audio_name (str), audio_data (bytes), user_id (UUID), db (Session).
+    """
+    Function to save mp3 file in db. Arguments: audio_name (str), audio_data (bytes), user_id (UUID), db (Session).
     Function returns a link with parameters to download mp3 file.
     """
     db_audio = Audio(
@@ -87,7 +86,8 @@ async def db_save_audio(
 
 async def db_get_all_audio(
         db: Session):
-    """Function to get audio_id, audio_name and user_id of all instances of Audio table. No arguments.
+    """
+    Function to get audio_id, audio_name and user_id of all instances of Audio table. No arguments.
     Function returns a list of instances of Audio table.
     """
     audios = db.query(Audio).all()
@@ -99,7 +99,8 @@ async def db_get_audio(
         audio_id: UUID,
         user_id: UUID,
         db: Session):
-    """Function to get mp3 file from db. Arguments: audio_id (UUID), user_id (UUID), db (Session).
+    """
+    Function to get mp3 file from db. Arguments: audio_id (UUID), user_id (UUID), db (Session).
     Function returns a dict with audio_name (str) and audio_data (a b64encode.decode('utf-8') string).
     """
     audio_instance = db.query(Audio).filter(Audio.audio_id == audio_id, Audio.user_id == user_id).first()

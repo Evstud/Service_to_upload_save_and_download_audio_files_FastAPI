@@ -1,5 +1,4 @@
 import logging
-import magic
 import os
 
 from uuid import UUID
@@ -20,7 +19,8 @@ logger.info("Start service")
 
 @app.post("/create_user/", tags=['User'], description='Endpoint to create user')
 async def create_user(message: BaseUser, db: Session = Depends(get_db)):
-    """Function to create user. It handles an incoming message with 'username', call db function to create a new user
+    """
+    Function to create user. It handles an incoming message with 'username', call db function to create a new user
     and returns it.
     """
     user_name = message.user_name
@@ -29,6 +29,7 @@ async def create_user(message: BaseUser, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500,
                             detail=f"Exception is: {result}.")
     else:
+        logger.info("New user created.")
         return result
 
 
@@ -37,12 +38,14 @@ async def create_user(message: BaseUser, db: Session = Depends(get_db)):
     tags=['Audio'],
     description='Endpoint to create audio.')
 async def save_audio(user_id: UUID, user_token: UUID, file: UploadFile = File(...), db: Session = Depends(get_db)):
-    """Function to convert wav file to mp3 file and to save it in db. It receives user_id, user_token and 'wav'
+    """
+    Function to convert wav file to mp3 file and to save it in db. It receives user_id, user_token and 'wav'
     file with file_name, converts it into 'mp3' format and calls a db function to saves it in db and get a link
     to download this instance from db. Preliminary this function calls another function to verify if user is in db.
     """
     if file.content_type not in ['audio/x-wav', 'audio/wav']:
-        return {"error": "Unsupported file format."}
+        raise HTTPException(status_code=406,
+                            detail="Unsupported file format.")
 
     if await db_verify_user(
             user_id=user_id,
@@ -63,10 +66,11 @@ async def save_audio(user_id: UUID, user_token: UUID, file: UploadFile = File(..
                 try:
                     os.remove(file_path)
                 except OSError as e:
-                    print(f"Error: {e.filename}-{e.strerror}.")
+                    logger.info(f"Error: {e.filename}-{e.strerror}.")
             else:
-                print(f"The file {file_path} does not exist.")
+                logger.info(f"The file {file_path} does not exist.")
             if result:
+                logger.info("New mp3 created.")
                 return result
             else:
                 raise HTTPException(status_code=500,
@@ -95,7 +99,8 @@ async def get_audio(
         id: UUID,
         user: UUID,
         db: Session = Depends(get_db)):
-    """This function calls a db function to get an instance of Audio table by audio_id and user_id.
+    """
+    This function calls a db function to get an instance of Audio table by audio_id and user_id.
     Arguments: id (UUID, audio_id), user (UUID, user_id), db (Session)."""
     result = await db_get_audio(
         audio_id=id,
@@ -103,6 +108,7 @@ async def get_audio(
         db=db
     )
     if result:
+        logger.info("Audio table instance mp3 has been returned.")
         return result
     else:
         raise HTTPException(status_code=404,

@@ -2,7 +2,11 @@ FROM python:3.10
 
 WORKDIR /code/app
 
-COPY .env db.py main.py models.py requirements.txt schemas.py service_funcs.py /code/app/
+COPY .env db.py main.py models.py requirements.txt schemas.py db_funcs.py /code/app/
+
+RUN mkdir -p /code/app/temp
+
+RUN apt-get update && apt-get install -y ffmpeg
 
 RUN pip install --no-cache-dir --upgrade -r /code/app/requirements.txt
 

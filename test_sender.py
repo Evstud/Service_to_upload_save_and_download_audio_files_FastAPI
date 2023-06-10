@@ -1,6 +1,5 @@
 import aiohttp
 import asyncio
-from aiohttp import FormData
 import base64
 
 
@@ -20,7 +19,7 @@ async def send_audio_file(user_id, user_token, filepath):
         async with aiohttp.request(
                 "POST",
                 f'http://127.0.0.1:8001/create_audio/user_id/{user_id}/user_token/{user_token}/',
-                data=FormData({'file': open(filepath, 'rb')})) as resp:
+                data=aiohttp.FormData({'file': open(filepath, 'rb')})) as resp:
             response = await resp.json()
             print(response)
             return response
@@ -36,19 +35,14 @@ async def get_mp3(url: str):
 
 
 if __name__ == "__main__":
-    # asyncio.run(send_user_name("fourth_user"))
-    # asyncio.run(send_audio_file(
-    #     url="http://127.0.0.1:8001/create_audio/",
-    #     filename='sample-15s2.wav',
-    #     filepath='/home/evstud/Different_different/Downloads/sample-15s2.wav',
-    #     user_id='4916e250-177f-4dc0-9316-04abcfdb632f',
-    #     user_token='3c81ea37-769d-40d6-84be-a624adb051a7'
-    # ))
+    # asyncio.run(send_user_name("first_user"))
+    #
     # asyncio.run(send_audio_file(
     #     filepath="/home/evstud/Different_different/Downloads/sample-15s4.wav",
-    #     user_id="4276f65a-511e-4143-a39c-2bfd054fad57",
-    #     user_token="a54cbf3e-ddcc-43a9-a30b-68838bd8c4fb"
+    #     user_id="6e3bd2c9-ed1a-42df-9d4a-826a443f6bfd",
+    #     user_token="8eb120ff-d859-402c-b9e8-97f84b3406d7"
     # ))
+    #
     asyncio.run(get_mp3(
-        url="http://127.0.0.1:8001/record?id=c6e458f1-3b37-4ec8-a7a6-05df7b33cc00&user=4276f65a-511e-4143-a39c-2bfd054fad57"
+        url="http://127.0.0.1:8001/record?id=bc5a8361-55d7-4886-a21a-f010bd8691c3&user=69f853d1-b5e9-401c-8cb1-8936d8d08c02"
     ))
