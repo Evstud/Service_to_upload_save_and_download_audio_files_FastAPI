@@ -1,0 +1,15 @@
+version: '3'
+services:
+        postgres:
+                image: postgres
+                environment:
+                        POSTGRES_USER: postgres
+                        POSTGRES_PASSWORD: password
+                        POSTGRES_DB: db_second_test_app
+                ports:
+                        - 6432:5432
+                volumes:
+                        - ./postgres-db:/var/lib/postgresql/data
+                restart: on-failure
+volumes:
+        postgres-db:
