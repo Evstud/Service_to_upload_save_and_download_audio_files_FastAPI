@@ -1,7 +1,7 @@
 # Service_to_upload_save_and_download_audio_files_FastAPI
 Сервис для загрузки, конвертации из 'wav' в 'mp3', хранения и предоставления возможности скачать аудио файлы. 
 Приложение написано на FastAPI, в качестве БД используется PostgreSQL, при разработке применялись SQLAlchemy, Docker,
-Docker-compose.
+Docker-compose. Сохранность данных обеспечена, при рестарте контейнера c PostgreSQL данные сохраняются.
 ## Сборка и запуск
 Для локального запуска приложения необходимо наличие установленного docker и docker-compose 
 (для Linux: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04-ru).    
